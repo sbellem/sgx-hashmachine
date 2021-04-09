@@ -5,9 +5,8 @@ let
 in
 pkgs.stdenv.mkDerivation {
   inherit sgxsdk;
-  name = "sgx-quote";
+  name = "sgx-hashmachine";
   src = ./.;
-  #source $SGX_SDK/environment
   preConfigure = ''
     export SGX_SDK=$sgxsdk/sgxsdk
     export PATH=$PATH:$SGX_SDK/bin:$SGX_SDK/bin/x64
@@ -27,7 +26,6 @@ pkgs.stdenv.mkDerivation {
     openssl
     which
   ];
-
   installPhase = ''
     runHook preInstall
 
@@ -37,11 +35,9 @@ pkgs.stdenv.mkDerivation {
 
     runHook postInstall
   '';
-    #cp mrsigner $out/bin
   postInstall = ''
     $sgxsdk/sgxsdk/bin/x64/sgx_sign dump -cssfile enclave_sigstruct_raw -dumpfile /dev/null -enclave $out/bin/Enclave.signed.so
     cp enclave_sigstruct_raw $out/bin/
     '';
-    #./mrsigner enclave_sigstruct_raw > $out/bin/mrsigner.txt
   dontFixup = true;
 }

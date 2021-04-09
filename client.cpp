@@ -415,7 +415,8 @@ int main(int argc, char *argv[]) {
  */
 
 int do_quote(sgx_enclave_id_t eid, config_t *config) {
-  sgx_status_t status, sgxrv, xstatus;
+  // sgx_status_t status, sgxrv, xstatus;
+  sgx_status_t status, sgxrv;
   sgx_quote_t *quote;
   sgx_report_t report;
   sgx_report_t qe_report;
@@ -446,11 +447,16 @@ int do_quote(sgx_enclave_id_t eid, config_t *config) {
     exit(0);
   }
 
-  sgx_report_data_t report_data = {{0}};
-  sgx_status_t sha_status;
-  xstatus = enclave_set_report_data(eid, &sha_status, &report_data);
+  // TODO Put this in the get_report function as this must be done in enclave
+  // otherwise this code could be modified by the host such that the report data
+  // is tampered with.
+  // sgx_report_data_t report_data = {{0}};
+  // sgx_status_t sha_status;
+  // xstatus = enclave_set_report_data(eid, &sha_status, &report_data);
+  // print_hexstring(stdout, &report_data, sizeof(sgx_report_data_t));
 
-  status = get_report(eid, &sgxrv, &report, &target_info, &report_data);
+  // status = get_report(eid, &sgxrv, &report, &target_info, &report_data);
+  status = get_report(eid, &sgxrv, &report, &target_info);
   if (status != SGX_SUCCESS) {
     fprintf(stderr, "get_report: %08x\n", status);
     return 1;

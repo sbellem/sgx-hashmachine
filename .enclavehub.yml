@@ -1,0 +1,18 @@
+
+enclaves:
+  - name: sgx-hashmachine
+    build:
+      builder: docker
+      build_kwargs:
+        context_path: .
+        file: nix.Dockerfile
+        target: export-stage
+      output_dir: out
+      enclave_file: Enclave.so
+    enclave_config: Enclave/Enclave.config.xml
+    #signed_enclave:
+    #  path: .enclavehub/Enclave.signed.so
+    #  mrenclave: 5abbaaa5dc057d0a1c82815ca513ca610778d440e367d42fbd8a01de5cc68d54
+    #  mrsigner: bd71c6380ef77c5417e8b2d1ce2d4b6504b9f418e5049342440cfff2443d95bd
+    #ias_reports:
+    #  - .enclavehub/ias-report.json
