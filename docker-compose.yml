@@ -2,7 +2,6 @@ version: '3.9'
 
 services:
   aesm:
-    #image: initc3/linux-sgx:2.12-ubuntu18.04
     image: initc3/linux-sgx@sha256:9ca0612f0555bcb890afbeb9b21d57723b2512c68a057ec777d24f756ab2224a
     devices:
       - /dev/isgx
@@ -18,7 +17,7 @@ services:
     command: ./aesm_service --no-daemon
 
   genquote:
-    image: sgx_ra
+    image: sgx_quote
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,6 +27,8 @@ services:
       - /dev/isgx
     volumes:
       - aesmd-socket:/var/run/aesmd
+      - ./.enclavehub.yml:/usr/src/sgx-quote/.enclavehub.yml
+      - ./.enclavehub:/usr/src/sgx-quote/.enclavehub
     command: ./run-client --debug -q
 
 volumes:

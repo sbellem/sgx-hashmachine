@@ -77,13 +77,33 @@ static const sgx_ec256_public_t def_service_public_key = {
 //  sgx_report_t *report
 // r
 
-sgx_status_t get_report(sgx_report_t *report, sgx_target_info_t *target_info,
-                        sgx_report_data_t *report_data) {
+// sgx_status_t get_report(sgx_report_t *report, sgx_target_info_t *target_info,
+//                        sgx_report_data_t *report_data) {
+sgx_status_t get_report(sgx_report_t *report, sgx_target_info_t *target_info) {
 #ifdef SGX_HW_SIM
   return sgx_create_report(NULL, NULL, report);
 #else
-  // return sgx_create_report(target_info, NULL, report);
-  return sgx_create_report(target_info, report_data, report);
+  sgx_report_data_t report_data = {{0}};
+  // sgx_status_t status, sha_status;
+  // status = enclave_set_report_data(eid, &sha_status, &report_data);
+
+  // Hardcoded "Hello World!" string in hexadecimal format
+  const uint8_t x[] = {0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20,
+                       0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21};
+  int iterations = 100000000;
+  sgx_status_t sha_ret;
+  sgx_sha256_hash_t tmp_hash;
+  sha_ret = sgx_sha256_msg(x, sizeof(x), (sgx_sha256_hash_t *)tmp_hash);
+
+  for (int i = 1; i < iterations - 1; i++) {
+    sha_ret = sgx_sha256_msg((const uint8_t *)&tmp_hash, sizeof(tmp_hash),
+                             (sgx_sha256_hash_t *)tmp_hash);
+  }
+
+  sha_ret = sgx_sha256_msg((const uint8_t *)&tmp_hash, sizeof(tmp_hash),
+                           (sgx_sha256_hash_t *)&report_data);
+
+  return sgx_create_report(target_info, &report_data, report);
 #endif
 }
 
@@ -140,8 +160,24 @@ sgx_status_t enclave_ra_get_key_hash(sgx_status_t *get_keys_ret,
 sgx_status_t enclave_set_report_data(sgx_report_data_t *report_data) {
   const uint8_t x[] = {0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20,
                        0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21};
+  int iterations = 1000000000;
   sgx_status_t sha_ret;
-  sha_ret = sgx_sha256_msg(x, sizeof(x), (sgx_sha256_hash_t *)report_data);
+  sgx_sha256_hash_t tmp_hash;
+  sha_ret = sgx_sha256_msg(x, sizeof(x), (sgx_sha256_hash_t *)tmp_hash);
+
+  for (int i = 1; i < iterations - 1; i++) {
+    sha_ret = sgx_sha256_msg((const uint8_t *)&tmp_hash, sizeof(tmp_hash),
+                             (sgx_sha256_hash_t *)tmp_hash);
+  }
+
+  sha_ret = sgx_sha256_msg((const uint8_t *)&tmp_hash, sizeof(tmp_hash),
+                           (sgx_sha256_hash_t *)report_data);
+
+  // sha_ret = sgx_sha256_msg(x, sizeof(x), (sgx_sha256_hash_t *)report_data);
+  // sha_ret = sgx_sha256_msg((const uint8_t *)&report_data,
+  // sizeof(report_data),
+  //                         (sgx_sha256_hash_t *)report_data);
+
   return sha_ret;
 }
 
