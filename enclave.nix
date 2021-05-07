@@ -6,7 +6,19 @@ in
 pkgs.stdenv.mkDerivation {
   inherit sgxsdk;
   name = "sgx-hashmachine";
-  src = ./.;
+  # FIXME not sure why but the build is non-deterministic if using src = ./.;
+  # Possibly some untracked file(s) causing the problem ...?
+  # src = ./.;
+  # NOTE The commit (rev) cannot include this file, and therefore will at the very
+  # best one commit behind the commit including this file.
+  src = pkgs.fetchFromGitHub {
+    owner = "sbellem";
+    repo = "sgx-hashmachine";
+    rev = "69d77f1b4632a1469790c7d492ff262ac974c1e6";
+    # Command to get the sha256 hash (note the --fetch-submodules arg):
+    # nix run -f '<nixpkgs>' nix-prefetch-github -c nix-prefetch-github --rev 69d77f1b4632a1469790c7d492ff262ac974c1e6 sbellem sgx-hashmachine
+    sha256 = "0dr1q112nijd3d7ijqzj1z72xxymx8pr0a05xvlryjmsmicy9733";
+  };
   preConfigure = ''
     export SGX_SDK=$sgxsdk/sgxsdk
     export PATH=$PATH:$SGX_SDK/bin:$SGX_SDK/bin/x64
