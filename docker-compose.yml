@@ -17,7 +17,7 @@ services:
     command: ./aesm_service --no-daemon
 
   genquote:
-    image: sgx_quote
+    image: sgx_hashmachine
     build:
       context: .
       dockerfile: Dockerfile
@@ -27,8 +27,7 @@ services:
       - /dev/isgx
     volumes:
       - aesmd-socket:/var/run/aesmd
-      - ./.enclavehub.yml:/usr/src/sgx-quote/.enclavehub.yml
-      - ./.enclavehub:/usr/src/sgx-quote/.enclavehub
+      - ./out/Enclave.signed.so:/usr/src/hashmachine/Enclave.signed.so
     command: ./run-client --debug -q
 
 volumes:

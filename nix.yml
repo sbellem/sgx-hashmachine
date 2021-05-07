@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   build-enclave:
-    image: nix-sgxquote
+    image: nix-sgx-hashmachine
     build:
       context: .
       dockerfile: nix.Dockerfile

@@ -84,13 +84,11 @@ sgx_status_t get_report(sgx_report_t *report, sgx_target_info_t *target_info) {
   return sgx_create_report(NULL, NULL, report);
 #else
   sgx_report_data_t report_data = {{0}};
-  // sgx_status_t status, sha_status;
-  // status = enclave_set_report_data(eid, &sha_status, &report_data);
 
   // Hardcoded "Hello World!" string in hexadecimal format
   const uint8_t x[] = {0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20,
                        0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21};
-  int iterations = 1000000000;
+  int iterations = 100000000;
   sgx_status_t sha_ret;
   sgx_sha256_hash_t tmp_hash;
   sha_ret = sgx_sha256_msg(x, sizeof(x), (sgx_sha256_hash_t *)tmp_hash);
