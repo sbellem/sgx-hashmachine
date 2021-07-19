@@ -1,4 +1,22 @@
-FROM initc3/linux-sgx:2.13-ubuntu20.04
+##############################################################################
+#                                                                            #
+#                            Build enclave (trusted)                         #
+#                                                                            #
+##############################################################################
+FROM  nixpkgs/nix AS build-enclave
+
+WORKDIR /usr/src
+
+COPY nix /usr/src/nix
+COPY default.nix /usr/src/default.nix
+
+# install cachix, to fetch prebuilt sgxsdk from cache
+RUN nix-env -iA cachix -f https://cachix.org/api/v1/install
+RUN /nix/store/*cachix*/bin/cachix use initc3
+
+RUN nix-build
+
+FROM initc3/linux-sgx:2.13.3-ubuntu20.04
 
 RUN apt-get update && apt-get install -y \
                 autotools-dev \
@@ -60,3 +78,40 @@ RUN set -eux; \
     ./bootstrap; \
     ./configure --with-sgxsdk=/opt/sgxsdk; \
     make;
+
+# Copy reproducible signed enclave build from build-enclave stage
+COPY --from=build-enclave /usr/src/result/bin/Enclave.signed.so Enclave/Enclave.signed.so
+
+
+
+# install nix
+#ARG UID=1000
+#ARG GID=1000
+#
+#RUN apt-get update && apt-get install --yes git curl wget sudo xz-utils
+#RUN groupadd --gid $GID --non-unique photon \
+#    && useradd --create-home --uid $UID --gid $GID --non-unique --shell /bin/bash photon \
+#    && usermod --append --groups sudo photon \
+#    && echo "photon ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/photon \
+#    && mkdir -p /etc/nix \
+#    && echo 'sandbox = false' > /etc/nix/nix.conf
+#
+#ENV USER photon
+#USER photon
+#
+#WORKDIR /home/photon
+#
+##COPY --chown=photon:photon ./nix.conf /home/photon/.config/nix/nix.conf
+#
+#RUN curl -L https://nixos.org/nix/install | sh
+#
+#RUN . /home/photon/.nix-profile/etc/profile.d/nix.sh && \
+#  nix-channel --add https://nixos.org/channels/nixos-21.05 nixpkgs && \
+#  nix-channel --update && \
+#  nix-env -iA cachix -f https://cachix.org/api/v1/install && \
+#  cachix use initc3
+#
+#ENV NIX_PROFILES "/nix/var/nix/profiles/default /home/photon/.nix-profile"
+#ENV NIX_PATH /home/photon/.nix-defexpr/channels
+#ENV NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
+#ENV PATH /home/photon/.nix-profile/bin:$PATH
