@@ -38,9 +38,32 @@ section just below to see how to try it.
 * Obtain an **Unlinkable** subscription key for the
   [Intel SGX Attestation Service Utilizing Enhanced Privacy ID (EPID)](https://api.portal.trustedservices.intel.com/).
 
+#### Set Environment Variables
 * Edit the `settings` file to add your `SPID`, `IAS_PRIMARY_SUBSCRIPTION_KEY`, and
   `IAS_SECONDARY_SUBSCRIPTION_KEY`. **DO NOT COMMIT changes for this file, as it will
   contain secret data, namely your subscription keys.**
+
+To interact with IAS via Python code, before starting a container, set the two
+following environment variables:
+
+* `SGX_SPID` - used to create a quote
+* `IAS_PRIMARY_KEY` - used to access Intel's Attestation Service (IAS)
+
+```shell
+export SGX_SPID=<your-SPID>
+export IAS_PRIMARY_KEY=<your-ias-primary-key>
+```
+
+Alternatively, you can place the environment variables in a `.env` file, under
+the root of the repository. **NOTE** that the `IAS_PRIMARY_KEY` **MUST** be kept
+secret. Consequently, the file `.env` is not tracked by git, as it **MUST NOT** be
+uploaded to a public repository, such as on GitHub.
+
+```shell
+# .env sample
+SGX_SPID=<your-SPID>
+IAS_PRIMARY_KEY=<your-ias-primary-key>
+```
 
 Build the image, (for the client code):
 
@@ -112,9 +135,11 @@ Set the request headers. You need your **unlinkable** subscription key from the
 [Intel SGX Attestation Service Utilizing Enhanced Privacy ID (EPID)](https://api.portal.trustedservices.intel.com/).
 
 ```python
+import os
+
 headers = {
     'Content-Type': 'application/json',
-    'Ocp-Apim-Subscription-Key': 'your-ias-primary-subscription-key',
+    'Ocp-Apim-Subscription-Key': os.environ['IAS_PRIMARY_KEY'],
 }
 ```
 
