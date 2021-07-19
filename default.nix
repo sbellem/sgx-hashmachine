@@ -1,10 +1,9 @@
 let
   sources = import ./nix/sources.nix;
   pkgs = import sources.nixpkgs { };
-  sgxsdk = /nix/store/znr7dg5bkv2kspcmqrak59hb88hcqv4k-sgxsdk;
+  sgx = import sources.sgx;
 in
 pkgs.stdenv.mkDerivation {
-  inherit sgxsdk;
   name = "sgx-hashmachine";
   # FIXME not sure why but the build is non-deterministic if using src = ./.;
   # Possibly some untracked file(s) causing the problem ...?
@@ -20,7 +19,7 @@ pkgs.stdenv.mkDerivation {
     sha256 = "0dr1q112nijd3d7ijqzj1z72xxymx8pr0a05xvlryjmsmicy9733";
   };
   preConfigure = ''
-    export SGX_SDK=$sgxsdk/sgxsdk
+    export SGX_SDK=${sgx.sgxsdk}/sgxsdk
     export PATH=$PATH:$SGX_SDK/bin:$SGX_SDK/bin/x64
     export PKG_CONFIG_PATH=$SGX_SDK/pkgconfig
     export LD_LIBRARY_PATH=$SGX_SDK/sdk_libs
@@ -28,7 +27,7 @@ pkgs.stdenv.mkDerivation {
     '';
   configureFlags = ["--with-sgxsdk=$SGX_SDK"];
   buildInputs = with pkgs; [
-    sgxsdk
+    sgx.sgxsdk
     unixtools.xxd
     bashInteractive
     autoconf
@@ -48,7 +47,7 @@ pkgs.stdenv.mkDerivation {
     runHook postInstall
   '';
   postInstall = ''
-    $sgxsdk/sgxsdk/bin/x64/sgx_sign dump -cssfile enclave_sigstruct_raw -dumpfile /dev/null -enclave $out/bin/Enclave.signed.so
+    ${sgx.sgxsdk}/sgxsdk/bin/x64/sgx_sign dump -cssfile enclave_sigstruct_raw -dumpfile /dev/null -enclave $out/bin/Enclave.signed.so
     cp enclave_sigstruct_raw $out/bin/
     '';
   dontFixup = true;

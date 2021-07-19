@@ -2,12 +2,11 @@
 enclaves:
   - name: sgx-hashmachine
     build:
-      builder: docker
+      builder: nix-build
       build_kwargs:
         context_path: .
-        file: nix.Dockerfile
-        target: export-stage
-      output_dir: out
+        file: default.nix
+      output_dir: result/bin
       enclave_file: Enclave.so
     enclave_config: Enclave/Enclave.config.xml
     #signed_enclave:
