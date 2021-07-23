@@ -29,10 +29,10 @@
         "homepage": null,
         "owner": "initc3",
         "repo": "nix-linux-sgx",
-        "rev": "71b98d9b54c70c04c1ccbb484aa34f5dd00ae238",
-        "sha256": "138jf0dbkgj7wi4ayj52fgg8kbd91ikg9dn2ik3x9qi7ds80nlv5",
+        "rev": "5d81f7ec7fb8bae0e2b0af34aac0d479cc68e751",
+        "sha256": "0r9frl6hm7vwgphmrbc2izsfymvs171z3jm0gj5n0rsi95w1fsrh",
         "type": "tarball",
-        "url": "https://github.com/initc3/nix-linux-sgx/archive/71b98d9b54c70c04c1ccbb484aa34f5dd00ae238.tar.gz",
+        "url": "https://github.com/initc3/nix-linux-sgx/archive/5d81f7ec7fb8bae0e2b0af34aac0d479cc68e751.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
