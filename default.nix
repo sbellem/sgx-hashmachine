@@ -13,13 +13,13 @@ pkgs.stdenv.mkDerivation {
   src = pkgs.fetchFromGitHub {
     owner = "sbellem";
     repo = "sgx-hashmachine";
-    rev = "3cd6c8b64f593b220796b1299066cd24b2b7457b";
+    rev = "b3b92755f87bc6ad18327b1e13fa11e6d6132a63";
     # Command to get the sha256 hash (note the --fetch-submodules arg):
-    # nix run -f '<nixpkgs>' nix-prefetch-github -c nix-prefetch-github --rev 3cd6c8b64f593b220796b1299066cd24b2b7457b sbellem sgx-hashmachine
-    sha256 = "181lv5p574c8626dqzj18361rrsgamg0ik2pi79v634wsff2950j";
+    # nix run -f '<nixpkgs>' nix-prefetch-github -c nix-prefetch-github --rev b3b92755f87bc6ad18327b1e13fa11e6d6132a63 sbellem sgx-hashmachine
+    sha256 = "1xjlqcbj9h0pp2lhvjv1wqqaj8a07sdn75425d5rbc3bjhrz24gc";
   };
   preConfigure = ''
-    export SGX_SDK=${sgx.sgxsdk}/sgxsdk
+    export SGX_SDK=${sgx.sgx-sdk}/sgxsdk
     export PATH=$PATH:$SGX_SDK/bin:$SGX_SDK/bin/x64
     export PKG_CONFIG_PATH=$SGX_SDK/pkgconfig
     export LD_LIBRARY_PATH=$SGX_SDK/sdk_libs
@@ -27,7 +27,7 @@ pkgs.stdenv.mkDerivation {
     '';
   configureFlags = ["--with-sgxsdk=$SGX_SDK"];
   buildInputs = with pkgs; [
-    sgx.sgxsdk
+    sgx.sgx-sdk
     unixtools.xxd
     bashInteractive
     autoconf
@@ -47,7 +47,7 @@ pkgs.stdenv.mkDerivation {
     runHook postInstall
   '';
   postInstall = ''
-    ${sgx.sgxsdk}/sgxsdk/bin/x64/sgx_sign dump -cssfile enclave_sigstruct_raw -dumpfile /dev/null -enclave $out/bin/Enclave.signed.so
+    ${sgx.sgx-sdk}/sgxsdk/bin/x64/sgx_sign dump -cssfile enclave_sigstruct_raw -dumpfile /dev/null -enclave $out/bin/Enclave.signed.so
     cp enclave_sigstruct_raw $out/bin/
     '';
   dontFixup = true;
