@@ -245,7 +245,7 @@ typedef struct _report_body_t
 
 Extract the report body:
 
-```
+```python
 import base64
 
 isv_enclave_quote_body = res.json()['isvEnclaveQuoteBody']
@@ -254,14 +254,14 @@ report_body = base64.b64decode(isv_enclave_quote_body)[48:432]
 
 Check the **MRENCLAVE**:
 
-```ipython
+```python
 report_body[64:96].hex()    # mrenclave
 # a6407626cc7c28cddff44a5d710a1810244237326e6037cf813b2baf86470892
 ```
 
 Extract the **REPORT DATA**:
 
-```ipython
+```python
 report_body[320:384].hex()  # report data
 # 661442fb3d8f47095f7886600aa3075935e155e27d3e021838e7caf69e4bf5260000000000000000000000000000000000000000000000000000000000000000
 ```
