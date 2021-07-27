@@ -12,3 +12,6 @@ win32/agent_win32.cpp
 win32/agent_win32.h
 out/
 result
+
+# ignore to avoid commiting API keys
+settings
