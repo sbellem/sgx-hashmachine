@@ -12,7 +12,7 @@ COPY default.nix /usr/src/default.nix
 
 RUN nix-build
 
-FROM initc3/linux-sgx:2.13.3-ubuntu20.04
+FROM initc3/linux-sgx:2.14-ubuntu20.04
 
 RUN apt-get update && apt-get install -y \
                 autotools-dev \
