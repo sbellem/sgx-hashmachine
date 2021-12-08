@@ -15,7 +15,7 @@ pkgs.stdenv.mkDerivation {
     rev = "200923d96ece58cf53d2e2c1047872ea6a418311";
     # Command to get the sha256 hash (note the --fetch-submodules arg):
     # nix run -f '<nixpkgs>' nix-prefetch-github -c nix-prefetch-github --rev 200923d96ece58cf53d2e2c1047872ea6a418311 sbellem sgx-hashmachine
-    sha256 = "200923d96ece58cf53d2e2c1047872ea6a418311";
+    sha256 = "1in0byp3bfcz5j3byil4ppz4i0vb9jhxrwj9qbbi6d3hp5psiwiz";
   };
   preConfigure = ''
     export SGX_SDK=${pkgs.sgx-sdk}/sgxsdk
