@@ -10,10 +10,6 @@ WORKDIR /usr/src
 COPY nix /usr/src/nix
 COPY default.nix /usr/src/default.nix
 
-# install cachix, to fetch prebuilt sgxsdk from cache
-RUN nix-env -iA cachix -f https://cachix.org/api/v1/install
-RUN /nix/store/*cachix*/bin/cachix use initc3
-
 RUN nix-build
 
 FROM initc3/linux-sgx:2.13.3-ubuntu20.04
