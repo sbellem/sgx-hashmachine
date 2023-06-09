@@ -9,10 +9,10 @@ services:
       - /dev/isgx
 
   genquote:
-    image: sgx_hashmachine
+    image: teehash
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: x.Dockerfile
     depends_on:
       - aesm
     devices:
@@ -22,6 +22,7 @@ services:
       IAS_PRIMARY_KEY: ${IAS_PRIMARY_KEY}
     volumes:
       - aesmd-socket:/var/run/aesmd
+      - ./result/bin/Enclave.signed.so:/usr/src/hashmachine/Enclave.signed.so
     command: ./run-client --debug -q
 
 volumes:
