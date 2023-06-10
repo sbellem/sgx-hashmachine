@@ -200,7 +200,7 @@ For instance:
 ```
 
 #### Verifying the MRENCLAVE, and REPORT DATA
-Getting the **MRENCLAVE**, **MRSIGNER and **REPORT DATA** out of the report requires
+Getting the **MRENCLAVE**, **MRSIGNER** and **REPORT DATA** out of the report requires
 to know the structure of a quote:
 
 ```C
