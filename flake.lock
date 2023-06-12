@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "alt-nixpkgs": {
+      "locked": {
+        "lastModified": 1686466545,
+        "narHash": "sha256-bDHPQI9e5QLRqc9dwJDfmtkjh0U7yK7EIuYq4MdFmmE=",
+        "owner": "sbellem",
+        "repo": "nixpkgs",
+        "rev": "20ff746c79c5f0c10b8c4aa8e0b441e0b0ebd034",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sbellem",
+        "repo": "nixpkgs",
+        "rev": "20ff746c79c5f0c10b8c4aa8e0b441e0b0ebd034",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -20,22 +36,23 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1686303126,
-        "narHash": "sha256-IkFHjFxuEsBxy3H4B9yY6XYx/Ybbadh+hxqnWRtLhMo=",
-        "owner": "sbellem",
+        "lastModified": 1685566663,
+        "narHash": "sha256-btHN1czJ6rzteeCuE/PNrdssqYD2nIA4w48miQAFloM=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "3eaaa55ac9c6d7c0c913217ff85c2bf7a8a337f0",
+        "rev": "4ecab3273592f27479a583fb6d975d4aba3486fe",
         "type": "github"
       },
       "original": {
-        "owner": "sbellem",
+        "owner": "nixos",
+        "ref": "23.05",
         "repo": "nixpkgs",
-        "rev": "3eaaa55ac9c6d7c0c913217ff85c2bf7a8a337f0",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
+        "alt-nixpkgs": "alt-nixpkgs",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs"
       }

@@ -2,13 +2,15 @@
   description = "sgx hash machine";
 
   inputs = {
-    nixpkgs.url = "github:sbellem/nixpkgs/3eaaa55ac9c6d7c0c913217ff85c2bf7a8a337f0";
+    nixpkgs.url = "github:nixos/nixpkgs/23.05";
+    alt-nixpkgs.url = "github:sbellem/nixpkgs/20ff746c79c5f0c10b8c4aa8e0b441e0b0ebd034";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = {
     self,
     nixpkgs,
+    alt-nixpkgs,
     flake-utils,
   }:
     flake-utils.lib.eachSystem ["x86_64-linux"] (
@@ -16,6 +18,9 @@
         pkgs = import nixpkgs {
           inherit system;
         };
+        sgx-sdk = (import alt-nixpkgs {
+          inherit system;
+        }).sgx-sdk;
       in
         with pkgs; {
 
@@ -27,20 +32,10 @@
               path = ./.;
               name = "${pname}-${version}";
             };
-            #src = fetchFromGitHub {
-            #  owner = "sbellem";
-            #  repo = "sgx-hashmachine";
-            #  rev = "200923d96ece58cf53d2e2c1047872ea6a418311";
-            #  # Command to get the sha256 hash (note the --fetch-submodules arg):
-            #  # nix run -f '<nixpkgs>' nix-prefetch-github -c nix-prefetch-github \
-            #  #   --rev 200923d96ece58cf53d2e2c1047872ea6a418311 sbellem sgx-hashmachine
-            #  sha256 = "1in0byp3bfcz5j3byil4ppz4i0vb9jhxrwj9qbbi6d3hp5psiwiz";
-            #};
 
-            #SGX_SDK = "${sgx-sdk}/sgxsdk";
+            SGX_SDK = "${sgx-sdk}/sgxsdk";
 
             preConfigure = ''
-              export SGX_SDK=${sgx-sdk}/sgxsdk
               export PATH=$PATH:$SGX_SDK/bin:$SGX_SDK/bin/x64
               export PKG_CONFIG_PATH=$SGX_SDK/pkgconfig
               export LD_LIBRARY_PATH=$SGX_SDK/sdk_libs

@@ -3,16 +3,25 @@
 #                            Build enclave (trusted)                         #
 #                                                                            #
 ##############################################################################
-FROM  nixpkgs/nix AS build-enclave
+FROM  nixpkgs/cachix-flakes AS build-enclave
 
 WORKDIR /usr/src
 
-COPY nix /usr/src/nix
-COPY default.nix /usr/src/default.nix
+#COPY nix /usr/src/nix
+#COPY default.nix /usr/src/default.nix
+#COPY flake.nix /usr/src/
+COPY . .
 
-RUN mkdir -p ~/.config/nixpkgs && mv /usr/src/nix/config.nix ~/.config/nixpkgs/
+#RUN mkdir -p ~/.config/nixpkgs && mv /usr/src/nix/config.nix ~/.config/nixpkgs/
+RUN set -eux; \
+    \
+    mkdir -p ~/.config/nixpkgs; \
+    touch ~/.config/nixpkgs/config.nix; \
+    echo "{ permittedInsecurePackages = [ \"openssl-1.1.1u\" ]; }" \
+        >> ~/.config/nixpkgs/config.nix;
 
-RUN nix-build
+RUN cachix use gluonixpkgs
+RUN nix build --impure
 
 
 FROM ghcr.io/initc3/sgx:2.19-jammy as run-app
